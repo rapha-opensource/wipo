@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ ! -e /tmp/signal ]; then
+	mkfifo /tmp/signal
+fi
+
+while [ True ]; do
+	/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -s \
+	| sed -e '1d' \
+	| sed -e 's/^.*\([0-9a-f]\{2\}:[0-9a-f]\{2\}:[0-9a-f]\{2\}:[0-9a-f]\{2\}:[0-9a-f]\{2\}:[0-9a-f]\{2\}\) -\([0-9]\{2\}\).*$/\1 \2/' \
+	> /tmp/signal
+done
